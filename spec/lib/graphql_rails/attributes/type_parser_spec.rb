@@ -86,7 +86,12 @@ module GraphqlRails
           let(:type) { 'SomeImage' }
 
           it 'returns graphql type defined on that model' do
-            image = Object.const_set('SomeImage', Class.new { include GraphqlRails::Model })
+            graphql_class = Class.new do
+              include GraphqlRails::Model
+
+              graphql { |g| g.attribute(:format) }
+            end
+            image = Object.const_set('SomeImage', graphql_class)
             expect(graphql_type).to eq image.graphql.graphql_type
           end
         end

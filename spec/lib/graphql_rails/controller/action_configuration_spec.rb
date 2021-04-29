@@ -7,6 +7,10 @@ module GraphqlRails
     RSpec.describe ActionConfiguration do
       class DummyModel
         include GraphqlRails::Model
+
+        graphql do |g|
+          g.attribute :id
+        end
       end
 
       subject(:config) { described_class.new(name: 'show', controller: class_double(Controller)) }

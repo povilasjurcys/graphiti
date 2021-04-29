@@ -8,11 +8,12 @@ module GraphqlRails
 
       include ::GraphqlRails::Service
 
-      def initialize(name:, type_name:, description: nil)
+      def initialize(name:, type_name:, description: nil, attributes: [])
         @name = name
         @type_name = type_name
         @description = description
         @new_class = false
+        @attributes = attributes
       end
 
       def klass
@@ -26,7 +27,7 @@ module GraphqlRails
       private
 
       attr_accessor :new_class
-      attr_reader :name, :type_name, :description
+      attr_reader :name, :type_name, :description, :attributes
 
       def build_graphql_type_klass
         graphql_type_name = name
@@ -39,7 +40,11 @@ module GraphqlRails
 
         self.new_class = true
 
-        Object.const_set(type_name, graphql_type_klass)
+        if attributes.any?
+          Object.const_set(type_name, graphql_type_klass)
+        else
+          graphql_type_klass
+        end
       end
     end
   end

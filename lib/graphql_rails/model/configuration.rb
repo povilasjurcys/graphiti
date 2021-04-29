@@ -56,12 +56,7 @@ module GraphqlRails
       end
 
       def graphql_type
-        @graphql_type ||= FindOrBuildGraphqlType.call(
-          name: name,
-          description: description,
-          attributes: attributes,
-          type_name: type_name
-        )
+        @graphql_type = refetch_graphql_type
       end
 
       def connection_type
@@ -74,6 +69,21 @@ module GraphqlRails
 
       def default_name
         @default_name ||= model_class.name.split('::').last
+      end
+
+      def refetch_graphql_type
+        return @refetch_graphql_type if defined?(@refetch_graphql_type)
+
+        fetched_type = FindOrBuildGraphqlType.call(
+          name: name,
+          description: description,
+          attributes: attributes,
+          type_name: type_name
+        )
+
+        @refetch_graphql_type = fetched_type if fetched_type.name.present?
+
+        fetched_type
       end
     end
   end

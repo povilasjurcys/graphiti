@@ -31,7 +31,8 @@ module GraphqlRails
         @type_class_finder ||= FindOrBuildGraphqlTypeClass.new(
           name: name,
           type_name: type_name,
-          description: description
+          description: description,
+          attributes: attributes
         )
       end
 

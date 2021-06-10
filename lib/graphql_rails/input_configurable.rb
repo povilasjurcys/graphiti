@@ -3,9 +3,14 @@
 module GraphqlRails
   # contains configuration options related with inputs
   module InputConfigurable
-    def permit(*no_type_attributes, **typed_attributes)
-      no_type_attributes.each { |attribute| permit_input(attribute) }
-      typed_attributes.each { |attribute, type| permit_input(attribute, type: type) }
+    def permit(*args)
+      args.each do |arg|
+        if arg.is_a? Hash
+          arg.each { |attribute, type| permit_input(attribute, type: type) }
+        else
+          permit_input(arg)
+        end
+      end
       self
     end
 
